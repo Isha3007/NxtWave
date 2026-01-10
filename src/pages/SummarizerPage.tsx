@@ -64,44 +64,43 @@ export default function SummarizerPage() {
   };
 
   const handleProcess = async () => {
-    if (!file) return;
+  if (!file) return;
 
-    setIsProcessing(true);
+  setIsProcessing(true);
+  setSummary(null);
 
-    // Simulate processing - In production, this would call your API
-    await new Promise(resolve => setTimeout(resolve, 3000));
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    // Mock summary result
-    const mockSummary: SummaryResult = {
-      eligibility: [
-        "Must be a citizen of India",
-        "Annual household income below ₹2.5 Lakhs",
-        "Age between 18-60 years",
-        "Not availing similar benefits from other schemes",
-      ],
-      benefits: [
-        "Health coverage up to ₹5 Lakhs per family per year",
-        "Cashless treatment at empanelled hospitals",
-        "Coverage for pre-existing diseases from day one",
-        "No cap on family size or age",
-      ],
-      documents: [
-        "Aadhaar Card (mandatory)",
-        "Ration Card or BPL Certificate",
-        "Income Certificate from competent authority",
-        "Passport-size photographs",
-        "Bank account details",
-      ],
-    };
+    const res = await fetch("http://localhost:8000/api/summarize-pdf", {
+      method: "POST",
+      body: formData,
+    });
 
-    setSummary(mockSummary);
-    setIsProcessing(false);
+    if (!res.ok) {
+      throw new Error("Failed to summarize document");
+    }
+
+    const data: SummaryResult = await res.json();
+
+    setSummary(data);
 
     toast({
       title: "Document Processed",
       description: "Your scheme document has been summarized successfully.",
     });
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Failed to process document. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
   };
+
 
   const handleDownload = () => {
     if (!summary) return;

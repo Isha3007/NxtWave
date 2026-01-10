@@ -32,10 +32,10 @@ export function SchemeCard({ scheme, onSelect, isSelected, showSelectButton }: S
               <Badge variant="secondary" className="text-xs">
                 {scheme.category}
               </Badge>
-              <div className={cn("flex items-center gap-1 text-xs font-medium", confidenceColor)}>
+              {/* <div className={cn("flex items-center gap-1 text-xs font-medium", confidenceColor)}>
                 <Sparkles className="h-3 w-3" />
                 {scheme.confidence}% match
-              </div>
+              </div> */}
             </div>
             <CardTitle className="text-lg leading-tight">{scheme.title}</CardTitle>
           </div>
@@ -97,3 +97,4 @@ export function SchemeCard({ scheme, onSelect, isSelected, showSelectButton }: S
     </Card>
   );
 }
+
